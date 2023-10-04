@@ -1,0 +1,283 @@
+order of there working
+select
+from
+where
+group by
+having
+order by
+
+**total qty for each product
+select product_id, SUM(quantity) 
+FROM order_details 
+GROUP BY product_id;
+
+*****ERROR*****total qty for each product
+select product_id, SUM(quantity) 
+FROM order_details 
+GROUP BY product_id;
+
+
+**total qty for each product under each order
+select product_id, order_id, SUM(quantity) 
+FROM order_details 
+GROUP BY product_id, order_id;
+
+
+** Helper table will not have its primary key. has composite keys which are primary keys for other two tables. eg order_details.
+
+**How many times each product is ordered.
+select product_id, COUNT(order_id) 
+FROM order_details 
+GROUP BY product_id; 
+
+**WHat is the max no of times any prod being ordered.
+SELECT product_id FROM order_details GROUP BY product_id HAVING COUNT(product_id) =
+(SELECT MAX(q.cnt) FROM
+(SELECT product_id, COUNT(order_id) cnt
+FROM order_details 
+GROUP BY product_id) q);
+
+SELECT product_id, count(order_id) cnt 
+FROM order_details 
+GROUP BY product_id 
+HAVING COUNT(order_id) =
+(SELECT MAX(q.cnt) FROM
+(SELECT product_id, COUNT(order_id) cnt
+FROM order_details 
+GROUP BY product_id) q);
+
+SELECT products.product_name, count(order_id) cnt 
+FROM order_details, products
+WHERE order_details.product_id = products.id 
+GROUP BY products.product_name 
+HAVING COUNT(order_id) =
+(SELECT MAX(q.cnt) FROM
+(SELECT product_id, COUNT(order_id) cnt
+FROM order_details 
+GROUP BY product_id) q);
+
+SELECT product_name FROM order_details, product GROUP BY product_id HAVING COUNT(product_id) =
+(SELECT MAX(q.cnt) FROM
+(SELECT product_id, COUNT(order_id) cnt
+FROM order_details 
+GROUP BY product_id) q);
+
+SELECT product_name, product_id FROM order_details, products GROUP BY product_name, product_id HAVING COUNT(product_id) =
+(SELECT MAX(q.cnt) FROM
+(SELECT product_id, COUNT(order_id) cnt
+FROM order_details 
+GROUP BY product_id) q);
+
+How many customers live in every country?
+SELECT country, COUNT(*) cnt
+FROM [dbo].[customers]
+GROUP BY country
+
+
+How many customers live in every state?
+
+count ka max
+SELECT MAX(CNT) of query   ans = 15
+
+
+
+
+name of those customers wh
+
+name o
+
+
+name of the customer in california
+
+Emily bought what products
+
+How much revenue made in every order
+revenue = qty * unit price
+
+
+
+SELECT EMPNO, SAL from [dbo].[EMP] e1
+WHERE 2 = (SELECT COUNT(DISTINCT SAL) from EMP e2 
+where e2.SAL > e1.SAL)
+
+
+name of the manager who has max employees working under him (use table emp)
+
+emp who does not have any emp under him
+
+
+NAME OF EMP WHERE SAL IS GREATER THAN(SEL SAL FROM EMP)
+SELECT ename, sal from EMP WHERE SAL > (SELECT avg(sal) FROM EMP)
+
+
+SELECT * FROM [dbo].[DEPT];
+
+ 
+
+DELETE FROM [dbo].[DEPT]
+
+WHERE DEPTNO=10;
+
+ 
+
+/*Employees with no departments*/
+
+SELECT ENAME, DNAME
+
+FROM EMP E
+
+LEFT OUTER JOIN DEPT D
+
+ON E.DEPTNO = D.DEPTNO
+
+WHERE D.DNAME IS NULL;
+
+ 
+
+/*Name of Employees with no managers*/
+
+SELECT E.ENAME AS 'EMP', M.ENAME AS 'MGR'
+
+FROM EMP E
+
+LEFT OUTER JOIN EMP M
+
+ON E.MGR = M.EMPNO
+
+WHERE M.ENAME IS NULL;
+
+ 
+
+/*Name of Employees with no employees under them*/
+
+SELECT DISTINCT E.ENAME AS 'EMP', M.ENAME AS 'MGR'
+
+FROM EMP E
+
+RIGHT OUTER JOIN EMP M
+
+ON E.MGR = M.EMPNO
+
+WHERE E.ENAME IS NULL;
+
+ 
+
+ 
+
+SELECT DISTINCT E.ENAME AS 'EMP', M.ENAME AS 'MGR'
+
+FROM EMP E
+
+FULL OUTER JOIN EMP M
+
+ON E.MGR = M.EMPNO;
+
+ 
+
+SELECT E.ENAME
+
+FROM EMP E
+
+WHERE MGR NOT IN (SELECT DISTINCT MGR
+
+FROM EMP
+
+WHERE MGR IS NOT NULL)
+
+ 
+
+SELECT * FROM EMP;
+
+ 
+
+/*Name of employees who have salary more than the avg salary*/
+
+SELECT E.ENAME, E.SAL
+
+FROM EMP E
+
+WHERE E.SAL > 
+
+(SELECT AVG(SAL) AS 'SAL'
+
+FROM EMP)
+
+ 
+
+/*Name of employees who have salary more than their department avg salary*/
+
+SELECT E.ENAME, E.SAL, E.DEPTNO
+
+FROM EMP E
+
+,(
+
+SELECT DEPTNO, AVG(SAL) AS 'SAL'
+
+FROM EMP
+
+GROUP BY DEPTNO) Q 
+
+WHERE E.DEPTNO = Q.DEPTNO AND E.SAL > Q.SAL; 
+
+
+
+OR
+
+SELECT ename, deptno from EMP A WHERE sal > (SELECT avg(SAL) from EMP B where B.deptno = A.deptno);
+
+
+Correalted nested query - without group by ka option
+
+
+
+In every dept who is the highest salary person
+SELECT A.ename, A.deptno, A.sal from EMP A WHERE A.sal = (SELECT max(B.SAL) from EMP B where B.deptno = A.deptno);
+
+
+CREATE TABLE CUST
+(CID VARCHAR(10),
+CNAME VARCHAR(255))
+
+CREATE TABLE LOAN(
+  CID VARCHAR(10),
+  LTYPE VARCHAR(20),
+  LAMT INT)
+  
+  CREATE TABLE ACCOUNT(
+    CID VARCHAR(10),
+    ACBAL INT,
+    ACTYPE VARCHAR(20))
+    
+    
+    INSERT INTO CUST VALUES ('C1', 'AMIT')
+    INSERT INTO CUST VALUES ('C2', 'AKASH')
+    
+    SELECT * FROM CUST
+    
+    INSERT INTO LOAN VALUES ('C1', 'HOME', 30000)  
+    INSERT INTO LOAN VALUES ('C1', 'PERSONAL', 20000) 
+    INSERT INTO LOAN VALUES ('C2', 'PERSONAL', 10000) 
+    INSERT INTO LOAN VALUES ('C2', 'HOME', 50000) 
+    
+    
+    INSERT INTO ACCOUNT VALUES ('C1', 2000, 'SA') 
+    INSERT INTO ACCOUNT VALUES ('C1', 5000, 'CA') 
+    INSERT INTO ACCOUNT VALUES ('C2', 1000, 'SA') 
+    INSERT INTO ACCOUNT VALUES ('C2', 3000, 'CA') 
+    
+    SELECT * FROM LOAN
+    
+    SELECT * FROM ACCOUNT
+    
+    -- CROSS-JOIN
+    -- CHASM TRAP
+    SELECT cname, SUM(lamt), SUM(acbal) FROM CUST, LOAN, ACCOUNT WHERE CUST.CID = LOAN.CID AND CUST.CID = ACCOUNT.CID GROUP BY CUST.CNAME
+ 
+
+EVERY EMP NAME AND THEIR TOTAL SAL --> SAL + COMMISSION
+
+
+
+
+
